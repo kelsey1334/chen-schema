@@ -23,12 +23,14 @@ TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 SCHEMA_TEXTAREA_SELECTOR = 'textarea[name="_inpost_head_script[synth_header_script]"]'
 
 def init_driver():
-chrome_options = Options()
-chrome_options.binary_location = os.getenv('CHROME_BIN', '/usr/bin/chromium')
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options = Options()
+    # Đường dẫn Chromium trên Railway/Docker (nếu có), thay đổi theo môi trường
+    chrome_bin = os.getenv('CHROME_BIN', '/usr/bin/chromium')
+    chrome_options.binary_location = chrome_bin
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--window-size=1920,1080")
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
