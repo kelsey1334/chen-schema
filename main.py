@@ -11,17 +11,16 @@ from webdriver_manager.chrome import ChromeDriverManager
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
-# Cấu hình logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Biến môi trường - cần khai báo trên Railway hoặc môi trường chạy
+# Biến môi trường
 WP_LOGIN_URL = os.getenv("WP_LOGIN_URL")  # VD: https://example.com/wp-login.php
 WP_USERNAME = os.getenv("WP_USERNAME")
 WP_PASSWORD = os.getenv("WP_PASSWORD")
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 
-# Selector chính xác cho textarea nhập script của plugin Header and Footer Scripts
+# Selector textarea chính xác theo plugin
 SCHEMA_TEXTAREA_SELECTOR = 'textarea[name="_inpost_head_script[synth_header_script]"]'
 
 def init_driver():
@@ -79,7 +78,8 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Vui lòng gửi file Excel (.xlsx hoặc .xls).")
         return
     file_path = f"./{file.file_name}"
-    await file.get_file().download_to_drive(file_path)
+    file_obj = await file.get_file()
+    await file_obj.download_to_drive(file_path)
     await update.message.reply_text("File đã tải xuống, bắt đầu xử lý...")
 
     driver = init_driver()
@@ -113,7 +113,7 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hoàn tất xử lý tất cả bài viết.")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Chào bạn! Gửi file Excel chứa 2 cột 'url' và 'script_schema' để tôi xử lý.")
+    await update.message.reply_text("Chào bạn! Gửi file Excel (.xlsx hoặc .xls) chứa 2 cột 'url' và 'script_schema' để tôi xử lý.")
 
 def main():
     application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
