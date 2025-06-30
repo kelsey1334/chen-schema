@@ -15,14 +15,14 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, fil
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Biến môi trường
+# Biến môi trường - cần khai báo trên Railway hoặc môi trường chạy
 WP_LOGIN_URL = os.getenv("WP_LOGIN_URL")  # VD: https://example.com/wp-login.php
 WP_USERNAME = os.getenv("WP_USERNAME")
 WP_PASSWORD = os.getenv("WP_PASSWORD")
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 
-# Selector textarea nhập script schema (cần thay theo site thật)
-SCHEMA_TEXTAREA_SELECTOR = "textarea#header_and_footer_scripts_textarea"
+# Selector chính xác cho textarea nhập script của plugin Header and Footer Scripts
+SCHEMA_TEXTAREA_SELECTOR = 'textarea[name="_inpost_head_script[synth_header_script]"]'
 
 def init_driver():
     chrome_options = Options()
