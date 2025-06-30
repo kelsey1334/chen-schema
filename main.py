@@ -24,14 +24,17 @@ SCHEMA_TEXTAREA_SELECTOR = 'textarea[name="_inpost_head_script[synth_header_scri
 
 def init_driver():
     chrome_options = Options()
-    # Đường dẫn Chromium trên Railway/Docker (nếu có), thay đổi theo môi trường
     chrome_bin = os.getenv('CHROME_BIN', '/usr/bin/chromium')
     chrome_options.binary_location = chrome_bin
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--window-size=1920,1080")
-    service = Service(ChromeDriverManager().install())
+
+    # Cố định version chromedriver phù hợp với Chrome/Chromium trên máy
+    driver_version = os.getenv('CHROMEDRIVER_VERSION', '114.0.5735.90')
+    service = Service(ChromeDriverManager(version=driver_version).install())
+
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
 
